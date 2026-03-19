@@ -10,14 +10,65 @@ const V={
   CT:{n:'香港大會堂劇院',s:'大會堂 CT',addr:'中環愛丁堡廣場5號',mtr:'香港站/中環站',tel:'2921 2840',cap:463,col:'#5a7850'},
 };
 const TR={
-  'KG-IS':[8,18,10],'KG-GL':[15,40,12],'KG-PE':[12,35,10],'KG-MC':[18,40,12],'KG-TS':[10,30,14],'KG-AC':[10,22,12],'KG-CT':[12,25,14],'KG-EK':[30,90,25],
-  'EK-IS':[35,80,28],'EK-GL':[30,75,25],'EK-PE':[32,80,26],'EK-MC':[40,85,30],'EK-TS':[30,75,28],'EK-AC':[35,82,30],'EK-CT':[35,85,30],
-  'IS-GL':[8,25,10],'IS-PE':[6,20,8],'IS-MC':[15,35,12],'IS-TS':[5,12,8],'IS-AC':[5,14,8],'IS-CT':[15,30,14],
-  'GL-PE':[7,22,9],'GL-MC':[15,35,12],'GL-TS':[8,22,10],'GL-AC':[8,22,10],'GL-CT':[15,35,14],
-  'PE-MC':[12,30,10],'PE-TS':[7,22,9],'PE-AC':[7,22,9],'PE-CT':[15,35,14],
-  'MC-TS':[15,35,12],'MC-AC':[15,35,12],'MC-CT':[20,42,16],
-  'TS-AC':[5,14,8],'TS-CT':[15,30,14],
-  'AC-CT':[15,28,12],
+  // ── Google Maps 公共交通實測校正版 (2026年3月) ──
+  // 格式: [公共交通, 純步行, 開車]  單位：分鐘
+  // 公共交通含步行至站台時間，不含散場疏散及Buffer
+  //
+  // KG = 尖沙咀文化中心  IS = iSQUARE尖沙咀  GL = 朗豪坊旺角
+  // PE = 圓方西九龍      MC = M+西九龍        TS = 時代廣場銅鑼灣
+  // AC = 藝術中心灣仔    CT = 大會堂中環       EK = 東九文化中心九龍灣
+
+  // KG（尖沙咀）出發
+  'KG-IS':[8,10,10],    // 同在尖沙咀，步行約8min
+  'KG-GL':[15,45,12],   // 尖沙咀→旺角站 MTR+步行
+  'KG-PE':[15,50,12],   // 尖沙咀→九龍站 MTR+圓方通道步行
+  'KG-MC':[20,55,14],   // 尖沙咀→M+，九龍站下後步行至M+
+  'KG-TS':[18,60,16],   // 尖沙咀→銅鑼灣，跨海MTR
+  'KG-AC':[15,35,13],   // 尖沙咀→灣仔，跨海MTR
+  'KG-CT':[17,45,14],   // 尖沙咀→中環，跨海MTR
+  'KG-EK':[30,110,22],  // 尖沙咀→九龍灣，MTR多站換線
+
+  // EK（九龍灣）出發
+  'EK-IS':[32,110,25],  // 九龍灣→尖沙咀，觀塘線+荃灣線
+  'EK-GL':[18,75,18],   // 九龍灣→旺角，觀塘線直達
+  'EK-PE':[22,90,20],   // 九龍灣→九龍站，觀塘→旺角換機鐵
+  'EK-MC':[25,95,22],   // 九龍灣→M+，同EK-PE再步行
+  'EK-TS':[25,95,22],   // 九龍灣→銅鑼灣，觀塘→旺角換線
+  'EK-AC':[28,100,24],  // 九龍灣→灣仔，觀塘→金鐘換線
+  'EK-CT':[35,115,28],  // 九龍灣→中環，觀塘線+換線
+  
+  // IS（尖沙咀iSQUARE）出發
+  'IS-GL':[8,25,10],    // 尖沙咀→旺角，MTR 1站
+  'IS-PE':[12,45,10],   // 尖沙咀→九龍，MTR 2站
+  'IS-MC':[17,50,13],   // 尖沙咀→M+，九龍站下再步行
+  'IS-TS':[20,55,15],   // 尖沙咀→銅鑼灣，跨海MTR（原5min嚴重低估）
+  'IS-AC':[18,40,13],   // 尖沙咀→灣仔，跨海MTR
+  'IS-CT':[20,50,15],   // 尖沙咀→中環，跨海MTR
+
+  // GL（旺角朗豪坊）出發
+  'GL-PE':[10,35,10],   // 旺角→九龍，MTR 1站
+  'GL-MC':[15,40,12],   // 旺角→M+，九龍站下再步行
+  'GL-TS':[20,55,15],   // 旺角→銅鑼灣，換線+跨海
+  'GL-AC':[22,60,16],   // 旺角→灣仔，換線+跨海
+  'GL-CT':[22,65,16],   // 旺角→中環，換線+跨海
+
+  // PE（圓方西九龍）出發
+  'PE-MC':[8,12,8],     // 圓方→M+，同在西九龍步行
+  'PE-TS':[20,55,15],   // 九龍→銅鑼灣，機鐵+跨海
+  'PE-AC':[18,50,14],   // 九龍→灣仔，跨海
+  'PE-CT':[18,55,14],   // 九龍→中環，機鐵+跨海
+
+  // MC（M+）出發
+  'MC-TS':[22,60,16],   // M+→銅鑼灣，跨海
+  'MC-AC':[18,52,14],   // M+→灣仔，跨海
+  'MC-CT':[20,58,15],   // M+→中環，跨海
+
+  // TS（時代廣場銅鑼灣）出發
+  'TS-AC':[8,18,8],     // 銅鑼灣→灣仔，MTR 1站
+  'TS-CT':[12,30,10],   // 銅鑼灣→中環，MTR 2站
+
+  // AC（藝術中心灣仔）出發
+  'AC-CT':[8,15,8],     // 灣仔→中環，MTR 1站
 };
 const FILMS=[
 {id:1,zh:'我們不是陌生人',zhCN:'我们不是陌生人',en:'We Are All Strangers',sec:'op',dir:'陳哲藝 Anthony Chen',co:'新加坡',yr:2026,dur:158,dbs:5.6,dbn:214,cast:['楊雁雁','許家樂','林偉文'],db:'https://movie.douban.com/subject/35328629/',sc:[[1,'KG',19,30,'01KG01','qa'],[4,'KG',14,30,'04KG01','']]},
@@ -234,11 +285,19 @@ const SLBL={op:'開幕/閉幕',ga:'晚會首映',la:'Les Auteurs',ma:'大師級'
 
 // transport mode: 0=transit, 1=walk, 2=drive
 let transportMode=0;
+var BUFFER_MODE=false; // buffer mode adds 10-15min to transit
 function gt(a,b){
   if(a===b)return 0;
   var arr=TR[a+'-'+b]||TR[b+'-'+a];
-  if(!arr)return [20,50,18][transportMode]||20;
-  return arr[transportMode]||arr[0];
+  var base;
+  if(transportMode===3){
+    // Buffer mode: use transit time + dynamic buffer (10-15min)
+    base=arr?arr[0]:[20,50,18][0];
+    var buf=base<=10?10:base<=20?12:15; // shorter trips need less buffer
+    return base+buf;
+  }
+  base=arr?arr[transportMode]:([20,50,18][transportMode]||20);
+  return base;
 }
 
 
@@ -500,11 +559,17 @@ function selDay(d,b){curDay=d;document.querySelectorAll('.dbtn').forEach(functio
 // ─── PLAN ────────────────────────────────────────────────────────────────────
 function updBadge(){var el=document.getElementById('plan-cnt');if(plan.length){el.textContent=plan.length;el.classList.add('show');}else el.classList.remove('show');}
 
-var TRANSPORT_LABELS=['🚇 公共交通+步行','🚶 純步行','🚗 開車'];
-var TRANSPORT_NOTES=['Google Maps地鐵+步行估算','純步行估算，僅適合近距離','高德/Google Maps駕車估算'];
+var TRANSPORT_LABELS=['🚇 公共交通+步行','🚶 純步行','🚗 開車','🛡 加Buffer'];
+var TRANSPORT_NOTES=[
+  'Google Maps公共交通+步行估算（不含散場疏散）',
+  '純步行估算，僅適合同區近距離場地',
+  '駕車估算，不含泊車及尋車時間',
+  '公共交通+現實緩衝（+10–15分鐘），含找路、上樓、入場排隊等現實耗時'
+];
 
 function setTransport(mode){
   transportMode=mode;
+  BUFFER_MODE=(mode===3);
   document.querySelectorAll('.tbtn').forEach(function(b,i){b.classList.toggle('active',i===mode);});
   renderPlan();
 }
@@ -533,7 +598,7 @@ function renderPlan(){
     +'</div>'
     +'<div class="transport-bar">'
     +'<span style="font-family:Space Mono,monospace;font-size:11px;color:var(--muted)">趕場方式</span>'
-    +TRANSPORT_LABELS.map(function(l,i){return '<button class="tbtn'+(i===mode?' active':'')+'" onclick="setTransport('+i+')">'+l+'</button>';}).join('')
+    +TRANSPORT_LABELS.map(function(l,i){var ac=(i===mode?' active':'');var bc=(i===3?' buf':'');return '<button class="tbtn'+ac+bc+'" onclick="setTransport('+i+')">'+l+'</button>';}).join('')
     +'<span style="font-family:Space Mono,monospace;font-size:10px;color:var(--muted)">'+TRANSPORT_NOTES[mode]+'</span>'
     +'</div>'
     +'<div style="display:flex;flex-direction:column;gap:9px;max-width:940px">';
@@ -678,7 +743,7 @@ function renderVenues(){
     }).join('');
   }
   function buildMatrix(mi){
-    var mNames=['🚇 公共交通','🚶 步行','🚗 開車'];
+    var mNames=['🚇 公共交通','🚶 步行','🚗 開車','🛡 加Buffer'];
     var h='<div class="matrix-wrap">'
       +'<div style="display:flex;gap:6px;margin-bottom:10px;align-items:center;flex-wrap:wrap">'
       +'<span style="font-family:Space Mono,monospace;font-size:11px;color:var(--muted)">顯示方式</span>'
@@ -693,7 +758,7 @@ function renderVenues(){
       VK.forEach(function(to){
         if(from===to){h+='<td class="mx-self">—</td>';return;}
         var arr=TR[from+'-'+to]||TR[to+'-'+from]||[20,50,18];
-        var t=arr[mi]||arr[0];
+        var t=(mi===3)?(arr[0]+(arr[0]<=10?10:arr[0]<=20?12:15)):arr[mi]||arr[0];
         var cls=t<=8?'mx-fast':t<=15?'mx-mid':'mx-slow';
         h+='<td class="'+cls+'">'+t+'</td>';
       });
